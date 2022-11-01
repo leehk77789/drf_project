@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from articles import serializers
 from articles.models import Article, Comment
+from django.db.models.query_utils import Q
 from articles.serializers import ArticleSerializer, ArticleListSerializer, ArticleCreateSerializer, CommentSerializer, CommentCreateSerializer
 
 class ArticleView(APIView):
@@ -24,6 +25,18 @@ class ArticleView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FeedView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        q = Q()
+        #지금 접속한 사람이 팔로우한 모든 사람 조건문으로 갖고옴
+        for user in request.user.followings.all():
+            q.add(Q(user=user), q.OR)
+        feeds = Article.objects.filter(q)
+        serializer = ArticleListSerializer(feeds, many=True)
+        return Response(serializer.data)
 
 class ArticleDetailView(APIView):
     #특정 게시글 불러오기(그냥보기)
