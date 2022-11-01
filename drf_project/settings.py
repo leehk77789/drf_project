@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'rest_framework_simplejwt',
+    "corsheaders",
+    'articles',
 ]
 
 REST_FRAMEWORK = {
@@ -52,6 +54,8 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -115,9 +119,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -167,3 +171,12 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+#media,static 사용 가능 설정
+STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = BASE_DIR / "mdeia"
+MEDIA_URL = "/media/"
